@@ -74,6 +74,15 @@
                             </p>
                         </a>
                     </li>
+                    {{-- ✅ Tambahan menu Daftar Poli --}}
+                    <li class="nav-item">
+                        <a href="{{ route('pasien.daftar_poli') }}" class="nav-link {{ request()->routeIs('pasien.daftar_poli') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-hospital-user"></i>
+                            <p>
+                                Poli
+                            </p>
+                        </a>
+                    </li>
                 @endif
 
                 <!-- ROLE DOKTER -->
@@ -83,6 +92,14 @@
                             <i class="nav-icon fas fa-columns"></i>
                             <p>
                                 Dashboard Dokter
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('jadwal-periksa.index') }}" class="nav-link {{ request()->routeIs('jadwal-periksa.*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-user-md"></i>
+                            <p>
+                                Jadwal Periksa
                             </p>
                         </a>
                     </li>
