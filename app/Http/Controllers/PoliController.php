@@ -82,28 +82,28 @@ class PoliController extends Controller
 
     // Menangani proses pendaftaran poli
     public function submit(Request $request)
-    {
-        $request->validate([
-            'id_poli' => 'required',
-            'id_jadwal' => 'required',
-        ]);
+{
+    $request->validate([
+        'id_jadwal' => 'required|exists:jadwal_periksa,id',
+    ]);
 
-        $user = Auth::user();
+    $user = Auth::user();
 
-        // Nomor antrian otomatis berdasarkan poli & tanggal
-        $nomorAntrian = DaftarPoli::where('id_poli', $request->id_poli)
-            ->whereDate('created_at', now())
-            ->count() + 1;
+    // hitung antrian berdasarkan JADWAL + TANGGAL
+    $nomorAntrian = DaftarPoli::where('id_jadwal', $request->id_jadwal)
+        ->whereDate('created_at', now())
+        ->count() + 1;
 
-        // Simpan data daftar poli
-        DaftarPoli::create([
-            'id_user'     => $user->id, // langsung dari users
-            'id_poli'     => $request->id_poli,
-            'id_jadwal'   => $request->id_jadwal,
-            'no_antrian'  => $nomorAntrian,
-        ]);
+    DaftarPoli::create([
+        'id_pasien'  => $user->id,
+        'id_jadwal'  => $request->id_jadwal,
+        'no_antrian' => $nomorAntrian,
+    ]);
 
-        return redirect()->back()
-            ->with('success', 'Pendaftaran berhasil! Nomor antrian Anda: ' . $nomorAntrian);
-    }
+    return back()->with(
+        'success',
+        'Pendaftaran berhasil! Nomor antrian Anda: ' . $nomorAntrian
+    );
+}
+
 }

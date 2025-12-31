@@ -103,6 +103,14 @@
                             </p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('atur-resep.index') }}" class="nav-link {{ request()->routeIs('atur-resep.*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-user-md"></i>
+                            <p>
+                                Atur Resep
+                            </p>
+                        </a>
+                    </li>
                 @endif
 
                 <li class="nav-item ">

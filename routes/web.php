@@ -7,6 +7,8 @@ use App\Http\Controllers\DokterController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\Dokter\JadwalPeriksaController;
+use App\Http\Controllers\DetailPeriksaController;
+use App\Http\Controllers\DaftarPoliController;
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -36,6 +38,7 @@ Route::middleware(['auth', 'role:dokter'])->prefix('dokter')->group(function () 
     })->name('dokter.dashboard');
     
     Route::resource('jadwal-periksa', JadwalPeriksaController::class);
+    Route::resource('atur-resep', DetailPeriksaController::class);
 });
 
 Route::middleware(['auth', 'role:pasien'])->prefix('pasien')->group(function () {
@@ -43,7 +46,10 @@ Route::middleware(['auth', 'role:pasien'])->prefix('pasien')->group(function () 
         return view('pasien.dashboard');
     })->name('pasien.dashboard');
 
-    Route::get('/daftar-poli', [PoliController::class, 'get'])->name('pasien.daftar_poli');
-    Route::post('/daftar-poli', [PoliController::class, 'submit'])->name('pasien.daftar_poli.submit');
+    Route::get('/daftar-poli', [PoliController::class, 'get'])
+        ->name('pasien.daftar_poli');
+
+    Route::post('/daftar-poli', [DaftarPoliController::class, 'store'])
+        ->name('pasien.daftar_poli.submit');
 });
 

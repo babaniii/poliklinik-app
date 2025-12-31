@@ -6,7 +6,18 @@
 
                 <div class="card">
                     <div class="card-body">
-                        {{-- pastikan action mengarah ke route obat.store --}}
+
+                        {{-- Flash error stok / validasi --}}
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
                         <form action="{{ route('obat.store') }}" method="POST">
                             @csrf
 
@@ -14,10 +25,11 @@
                                 {{-- Nama Obat --}}
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
-                                        <label for="nama_obat" class="form-label">Nama Obat <span class="text-danger">*</span></label>
+                                        <label class="form-label">
+                                            Nama Obat <span class="text-danger">*</span>
+                                        </label>
                                         <input type="text"
                                             name="nama_obat"
-                                            id="nama_obat"
                                             class="form-control @error('nama_obat') is-invalid @enderror"
                                             value="{{ old('nama_obat') }}"
                                             required>
@@ -30,13 +42,14 @@
                                 {{-- Kemasan --}}
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
-                                        <label for="kemasan" class="form-label">Kemasan <span class="text-danger">*</span></label>
+                                        <label class="form-label">
+                                            Kemasan <span class="text-danger">*</span>
+                                        </label>
                                         <input type="text"
                                             name="kemasan"
-                                            id="kemasan"
                                             class="form-control @error('kemasan') is-invalid @enderror"
                                             value="{{ old('kemasan') }}"
-                                            placeholder="Contoh: Strip, Botol, Tube"
+                                            placeholder="Strip / Botol / Tube"
                                             required>
                                         @error('kemasan')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -47,16 +60,37 @@
 
                             {{-- Harga --}}
                             <div class="form-group mb-3">
-                                <label for="harga" class="form-label">Harga <span class="text-danger">*</span></label>
+                                <label class="form-label">
+                                    Harga <span class="text-danger">*</span>
+                                </label>
                                 <input type="number"
                                     name="harga"
-                                    id="harga"
                                     class="form-control @error('harga') is-invalid @enderror"
                                     value="{{ old('harga') }}"
-                                    min="0" step="1" required>
+                                    min="0"
+                                    required>
                                 @error('harga')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                            </div>
+
+                            {{-- STOK OBAT (BARU) --}}
+                            <div class="form-group mb-3">
+                                <label class="form-label">
+                                    Stok Awal <span class="text-danger">*</span>
+                                </label>
+                                <input type="number"
+                                    name="stok"
+                                    class="form-control @error('stok') is-invalid @enderror"
+                                    value="{{ old('stok', 0) }}"
+                                    min="0"
+                                    required>
+                                @error('stok')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small class="text-muted">
+                                    Digunakan untuk manajemen stok dan resep dokter
+                                </small>
                             </div>
 
                             {{-- Tombol --}}
@@ -68,9 +102,11 @@
                                     <i class="fas fa-arrow-left"></i> Kembali
                                 </a>
                             </div>
+
                         </form>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

@@ -7,7 +7,7 @@
                 @if (session('message'))
                     <div class="alert alert-{{ session('type', 'success') }} alert-dismissible fade show" role="alert">
                         {{ session('message') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
 
@@ -21,10 +21,11 @@
                     <table class="table table-bordered table-striped align-middle">
                         <thead class="table-light text-center">
                             <tr>
-                                <th width="5%">No</th>
+                                <th>No</th>
                                 <th>Nama Obat</th>
                                 <th>Kemasan</th>
                                 <th>Harga</th>
+                                <th>Stok</th>
                                 <th width="20%">Aksi</th>
                             </tr>
                         </thead>
@@ -33,8 +34,21 @@
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $obat->nama_obat }}</td>
-                                    <td>{{ $obat->kemasan }}</td>
+                                    <td>{{ $obat->kemasan ?? '-' }}</td>
                                     <td>Rp {{ number_format($obat->harga, 0, ',', '.') }}</td>
+                                    <td class="text-center">
+                                        @if ($obat->stok == 0)
+                                            <span class="badge bg-danger">Habis</span>
+                                        @elseif ($obat->stok <= 5)
+                                            <span class="badge bg-warning text-dark">
+                                                Menipis ({{ $obat->stok }})
+                                            </span>
+                                        @else
+                                            <span class="badge bg-success">
+                                                {{ $obat->stok }}
+                                            </span>
+                                        @endif
+                                    </td>
                                     <td class="text-center">
                                         <a href="{{ route('obat.edit', $obat->id) }}" class="btn btn-warning btn-sm">
                                             <i class="fas fa-edit"></i> Edit
@@ -42,7 +56,8 @@
                                         <form action="{{ route('obat.destroy', $obat->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                            <button class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Yakin ingin menghapus data obat ini?')">
                                                 <i class="fas fa-trash"></i> Hapus
                                             </button>
                                         </form>
@@ -50,7 +65,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center">Belum ada data obat.</td>
+                                    <td colspan="6" class="text-center">Belum ada data obat</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -62,7 +77,6 @@
     </div>
 
     <script>
-        // Auto close alert setelah 2 detik
         setTimeout(() => {
             const alert = document.querySelector('.alert');
             if (alert) {

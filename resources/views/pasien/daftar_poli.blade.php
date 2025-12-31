@@ -1,29 +1,32 @@
 <x-layouts.app title="Daftar Poli">
     <div class="container mt-4">
+
         <h3 class="mb-4 text-primary">
-            <i class="fas fa-hospital-user"></i> Pendaftaran Poli
+            <i class="fas fa-hospital-user me-2"></i>Pendaftaran Poli
         </h3>
 
-        {{-- Notifikasi sukses --}}
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Berhasil!</strong> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {{-- Alert --}}
+        @if(session('message'))
+            <div class="alert alert-{{ session('type') }} alert-dismissible fade show">
+                {{ session('message') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
-        {{-- Form daftar poli --}}
+        {{-- Form --}}
         <div class="card shadow mb-4">
             <div class="card-header bg-primary text-white">
                 <strong>Form Pendaftaran Poli</strong>
             </div>
+
             <div class="card-body">
                 <form action="{{ route('pasien.daftar_poli.submit') }}" method="POST">
                     @csrf
-                    <div class="row mb-3">
+
+                    <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label for="id_poli" class="form-label">Pilih Poli</label>
-                            <select name="id_poli" id="id_poli" class="form-select" required>
+                            <label class="form-label fw-semibold">Poli</label>
+                            <select name="id_poli" class="form-select" required>
                                 <option value="">-- Pilih Poli --</option>
                                 @foreach($poli as $p)
                                     <option value="{{ $p->id }}">{{ $p->nama_poli }}</option>
@@ -32,12 +35,12 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="id_jadwal" class="form-label">Pilih Jadwal Periksa</label>
-                            <select name="id_jadwal" id="id_jadwal" class="form-select" required>
-                                <option value="">-- Pilih Jadwal Periksa --</option>
+                            <label class="form-label fw-semibold">Jadwal Periksa</label>
+                            <select name="id_jadwal" class="form-select" required>
+                                <option value="">-- Pilih Jadwal --</option>
                                 @foreach($jadwalPeriksa as $j)
                                     <option value="{{ $j->id }}">
-                                        {{ $j->dokter->nama }} - {{ $j->hari }}
+                                        {{ $j->dokter->nama }} | {{ $j->hari }}
                                         ({{ $j->jam_mulai }} - {{ $j->jam_selesai }})
                                     </option>
                                 @endforeach
@@ -46,28 +49,29 @@
                     </div>
 
                     <div class="text-end">
-                        <button type="submit" class="btn btn-success">
-                            <i class="fas fa-paper-plane"></i> Daftar Poli
+                        <button class="btn btn-success px-4">
+                            <i class="fas fa-paper-plane me-1"></i>Daftar
                         </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        {{-- Tabel riwayat pendaftaran --}}
+        {{-- Riwayat --}}
         <div class="card shadow">
             <div class="card-header bg-secondary text-white">
-                <strong>Riwayat Pendaftaran Poli</strong>
+                <strong>Riwayat Pendaftaran</strong>
             </div>
+
             <div class="card-body">
                 @if($daftar_poli->isEmpty())
-                    <p class="text-muted">Belum ada riwayat pendaftaran poli.</p>
+                    <p class="text-muted mb-0">Belum ada riwayat pendaftaran.</p>
                 @else
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped align-middle">
-                            <thead class="table-dark">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-dark text-center">
                                 <tr>
-                                    <th>No Antrian</th>
+                                    <th>No</th>
                                     <th>Poli</th>
                                     <th>Dokter</th>
                                     <th>Hari</th>
@@ -77,11 +81,14 @@
                             <tbody>
                                 @foreach($daftar_poli as $d)
                                     <tr>
-                                        <td>{{ $d->no_antrian }}</td>
+                                        <td class="text-center">{{ $d->no_antrian }}</td>
                                         <td>{{ $d->poli->nama_poli }}</td>
                                         <td>{{ $d->jadwalPeriksa->dokter->nama }}</td>
                                         <td>{{ $d->jadwalPeriksa->hari }}</td>
-                                        <td>{{ $d->jadwalPeriksa->jam_mulai }} - {{ $d->jadwalPeriksa->jam_selesai }}</td>
+                                        <td>
+                                            {{ $d->jadwalPeriksa->jam_mulai }} -
+                                            {{ $d->jadwalPeriksa->jam_selesai }}
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -90,5 +97,6 @@
                 @endif
             </div>
         </div>
+
     </div>
 </x-layouts.app>

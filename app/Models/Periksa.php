@@ -21,4 +21,8 @@ class Periksa extends Model
     public function detailPeriksa(){
         return $this->hasMany(User::class, 'id_periksa');
     }
+    public function pasien()
+{
+    return $this->belongsTo(User::class, 'pasien_id');
+}
 }
